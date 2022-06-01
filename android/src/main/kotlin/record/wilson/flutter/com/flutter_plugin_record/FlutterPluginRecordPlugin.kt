@@ -46,7 +46,7 @@ class FlutterPluginRecordPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         @JvmStatic
         fun registerWith(registrar: Registrar) {
             val plugin = initPlugin(registrar.messenger())
-            plugin.activity=registrar.activity()
+            plugin.activity=registrar.activity()!!
             registrar.addRequestPermissionsResultListener(plugin)
         }
 
@@ -278,13 +278,11 @@ class FlutterPluginRecordPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         } else {
             initPermission()
         }
-
-
     }
 
     private fun initPermission() {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO) !== PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+        if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.RECORD_AUDIO) !== PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
         }
     }
 
@@ -463,7 +461,7 @@ class FlutterPluginRecordPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
 
     // 权限监听回调
-    override fun onRequestPermissionsResult(p0: Int, p1: Array<out String>?, p2: IntArray?): Boolean {
+    override fun onRequestPermissionsResult(p0: Int, p1: Array<out String>, p2: IntArray): Boolean {
         if (p0 == 1) {
             if (p2?.get(0) == PackageManager.PERMISSION_GRANTED) {
 //                initRecord()
